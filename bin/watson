@@ -1,0 +1,11 @@
+#!/usr/bin/env php
+<?php
+
+define('WATSON_BIN_PATH', __FILE__);
+
+if (is_file($autoload = getcwd() . '/vendor/autoload.php')) {
+    require $autoload;
+}
+
+$appFactory = new jlttt\watson\ApplicationFactory();
+$appFactory->create()->run();

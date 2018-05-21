@@ -1,0 +1,8 @@
+{
+    "autoload": {
+        "psr-4" : {"jlttt\\watson\\" : "src/"}
+    },
+    "require": {
+        "symfony/console": "^4.0"
+    }
+}
