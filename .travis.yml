@@ -1,0 +1,15 @@
+addons:
+  code_climate:
+    repo_token: 1b92424780ed0e8c573f35f2130c53fc4257f2ce378afe7bf609a76836f6e828
+language: php
+php:
+  - '7.2.4'
+before_script:
+  - mkdir -p build/logs/
+script: 
+  - composer install
+  - CODECLIMATE_REPO_TOKEN=1b92424780ed0e8c573f35f2130c53fc4257f2ce378afe7bf609a76836f6e828 phpdbg -qrr
+  vendor/bin/phpspec run
+notifications:
+  on_success: change
+  on_failure: change
