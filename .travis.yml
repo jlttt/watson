@@ -11,7 +11,7 @@ before_script:
     - ./cc-test-reporter before-build
 script:
     - composer install
-    - phpdbg -qrr vendor/bin/phpspec run
+    - phpdbg -qrr vendor/bin/phpspec run --config=phpspec-ci.yml
 after_script:
     - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 notifications:

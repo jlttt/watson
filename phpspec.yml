@@ -1,11 +1,3 @@
-extensions:
-  LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:
-    format:
-      - clover
-    output:
-      clover: build/logs/clover.xml
-    whitelist:
-      - src
 suites:
     #...
     default:

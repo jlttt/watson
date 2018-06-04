@@ -1,0 +1,14 @@
+extensions:
+  LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:
+    format:
+      - clover
+    output:
+      clover: build/logs/clover.xml
+    whitelist:
+      - src
+suites:
+    #...
+    default:
+        namespace: jlttt\watson
+        psr4_prefix: jlttt\watson
+        src_path: src
