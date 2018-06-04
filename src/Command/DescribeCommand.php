@@ -12,7 +12,6 @@ class DescribeCommand extends Command
         $this->setName('describe');
         $this->setDescription('What is Watson.');
         $this->setHelp('This command gives a short description on what is Watson');
-    ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

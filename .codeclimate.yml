@@ -30,11 +30,14 @@ ratings:
   - "**.py"
   - "**.rb"
 exclude_paths:
-- tests/
+- features/
+- spec/
+- bin/
 - .codeclimate.yml
 - .gitignore
 - .travis.yml
 - composer.json
 - composer.lock
 - phpspec.yml
+- phpspec-ci.yml
 - README.md

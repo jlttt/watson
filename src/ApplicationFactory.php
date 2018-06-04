@@ -23,7 +23,8 @@ class ApplicationFactory
         return self::VERSION;
     }
 
-    public function create() {
+    public function create()
+    {
         $application = new Application($this->getName(), $this->getVersion());
 
         $descriptionCommand = new DescribeCommand();
@@ -32,5 +33,4 @@ class ApplicationFactory
 
         return $application;
     }
-    
 }

@@ -35,7 +35,7 @@ class FeatureContext implements Context
      */
     public function iStartANewFrame()
     {
-        $this->frames->start("New Project");
+        $this->frames->start();
     }
 
     /**
@@ -47,4 +47,58 @@ class FeatureContext implements Context
             throw new Exception("Not only one frame is in progress");
         }
     }
+
+    /**
+     * @Given I have a frame in progress for project :project
+     */
+    public function iHaveAFrameInProgressForProject($project)
+    {
+        $this->frames = new Frames();
+        $this->frames->start($project);
+    }
+
+    /**
+     * @When I start a new frame for project :project
+     */
+    public function iStartANewFrameForProject($project)
+    {
+        try {
+            $this->frames->start($project);
+        } catch (\Exception $e) {
+
+        }
+    }
+
+    /**
+     * @Then The running frame should be for project :project
+     */
+    public function TheRunningFrameShouldBeForProject($project)
+    {
+        if (!$this->frames->hasRunning()) {
+            throw new Exception("No frame in progress");
+        }
+        $frame = $this->frames->getRunning();
+        if ($project != $frame->getProject()) {
+            throw new Exception("The running frame does not concern the project \"" . $project . "\"");
+        }
+    }
+
+    /**
+     * @When I stop the frame in progress
+     */
+    public function iStopTheFrameInProgress()
+    {
+        $this->frames->stop();
+    }
+
+    /**
+     * @Then I should have no more running frame
+     */
+    public function iShouldHaveNoMoreRunningFrame()
+    {
+        if ($this->frames->hasRunning()) {
+            throw new Exception("There is yet a frame in progress");
+        }
+    }
+
 }
