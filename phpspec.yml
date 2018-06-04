@@ -3,7 +3,7 @@ extensions:
     format:
       - clover
     output:
-      clover: build/coverage.xml
+      clover: build/logs/clover.xml
     whitelist:
       - src
 suites:

@@ -1,14 +1,19 @@
-addons:
-    code_climate:
-        repo_token: 1b92424780ed0e8c573f35f2130c53fc4257f2ce378afe7bf609a76836f6e828
+env:
+    global:
+        - CC_TEST_REPORTER_ID=1b92424780ed0e8c573f35f2130c53fc4257f2ce378afe7bf609a76836f6e828
 language: php
 php:
     - '7.2.4'
 before_script:
     - mkdir -p build/logs/
-script: 
+    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    - chmod +x ./cc-test-reporter
+    - ./cc-test-reporter before-build
+script:
     - composer install
-    - CODECLIMATE_REPO_TOKEN=1b92424780ed0e8c573f35f2130c53fc4257f2ce378afe7bf609a76836f6e828 phpdbg -qrr vendor/bin/phpspec run
+    - phpdbg -qrr vendor/bin/phpspec run
+after_script:
+    - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 notifications:
     on_success: change
     on_failure: change
