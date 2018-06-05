@@ -3,14 +3,17 @@
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
+use jlttt\watson\Clock\ManageableClock;
+use jlttt\watson\Clock\SystemClock;
 use jlttt\watson\Frame\Frames;
-
 /**
  * Defines application features from the specific context.
  */
 class FeatureContext implements Context
 {
     protected $frames;
+    protected $lastEndedFrame;
+    protected $clock;
     /**
      * Initializes context.
      *
@@ -27,7 +30,7 @@ class FeatureContext implements Context
      */
     public function iHaveNoFrameAlreadyRegistered()
     {
-        $this->frames = new Frames();
+        $this->frames = new Frames(new SystemClock());
     }
 
     /**
@@ -53,7 +56,7 @@ class FeatureContext implements Context
      */
     public function iHaveAFrameInProgressForProject($project)
     {
-        $this->frames = new Frames();
+        $this->frames = new Frames(new SystemClock());
         $this->frames->start($project);
     }
 
@@ -88,7 +91,7 @@ class FeatureContext implements Context
      */
     public function iStopTheFrameInProgress()
     {
-        $this->frames->stop();
+        $this->lastEndedFrame = $this->frames->stop();
     }
 
     /**
@@ -97,8 +100,39 @@ class FeatureContext implements Context
     public function iShouldHaveNoMoreRunningFrame()
     {
         if ($this->frames->hasRunning()) {
-            throw new Exception("There is yet a frame in progress");
+            throw new Exception("There is already a frame in progress");
         }
     }
+
+    /**
+     * @Given I have a frame in progress for project :project started at :time
+     */
+    public function iHaveAFrameInProgressForProjectStartedAt($project, $time)
+    {
+        $this->clock = new ManageableClock();
+        $this->clock->freezeAt($time);
+        $this->frames = new Frames($this->clock);
+        $this->frames->start($project);
+    }
+
+    /**
+     * @When I stop the frame at :time
+     */
+    public function iStopTheFrameAt($time)
+    {
+        $this->clock->freezeAt($time);
+        $this->lastEndedFrame = $this->frames->stop();
+    }
+
+    /**
+     * @Then The just ended frame should have a duration of :duration
+     */
+    public function theJustEndedFrameShouldHaveADurationOf($duration)
+    {
+        if ($this->lastEndedFrame->getDuration() != $duration) {
+            throw new Exception("The frame duration is wrong");
+        }
+    }
+
 
 }
