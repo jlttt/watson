@@ -61,13 +61,13 @@ class Frames
     public function load($fileName)
     {
         $frameDataList = json_decode(file_get_contents($fileName), true);
-        foreach($frameDataList as $frameData) {
+        foreach ($frameDataList as $frameData) {
             $frame = new Frame($frameData['project']);
             $frame->setStart($frameData['start']);
+            $this->running = $frame;
             if (!empty($frameData['end'])) {
                 $frame->setStop($frameData['end']);
-            } else {
-                $this->running = $frame;
+                $this->running = null;
             }
             $this->frames[] = $frame;
         }
@@ -93,5 +93,10 @@ class Frames
     {
         $this->frames = [];
         $this->running = null;
+    }
+
+    public function all()
+    {
+        return $this->frames;
     }
 }
