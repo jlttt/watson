@@ -37,7 +37,8 @@ class Frame
         return $this->end->diff($this->start)->format('%H:%I:%S');
     }
 
-    public function getStart() {
+    public function getStart()
+    {
         return $this->start;
     }
 

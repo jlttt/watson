@@ -128,4 +128,15 @@ JSON;
     {
         return file_get_contents($fileName);
     }
+
+    public function it_returns_all_frames()
+    {
+        $this->start("First Project");
+        $this->clock->now()->willReturn('2018-01-01 00:01:27');
+        $this->stop();
+        $this->clock->now()->willReturn('2018-01-02 00:00:00');
+        $this->start("Second Project");
+        $all = $this->all();
+        $all->shouldHaveCount(2);
+    }
 }
