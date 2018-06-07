@@ -36,4 +36,18 @@ class Frame
     {
         return $this->end->diff($this->start)->format('%H:%I:%S');
     }
+
+    public function getStart() {
+        return $this->start;
+    }
+
+    public function getStop()
+    {
+        return $this->end;
+    }
+
+    public function isFinished()
+    {
+        return !is_null($this->end);
+    }
 }

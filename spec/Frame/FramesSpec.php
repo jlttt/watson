@@ -4,16 +4,34 @@ namespace spec\jlttt\watson\Frame;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-
+use org\bovigo\vfs\vfsStream;
 use jlttt\watson\Frame\Frames;
 use jlttt\watson\Clock\ClockInterface;
 
 class FramesSpec extends ObjectBehavior
 {
+    const FILE_CONTENT = <<<JSON
+[
+    {
+        "project":"First Project",
+        "start":"2018-01-01 00:00:00",
+        "end":"2018-01-01 00:01:27"
+    },
+    {
+        "project":"Second Project",
+        "start":"2018-01-02 00:00:00"
+    }
+]
+JSON;
+
+    private $workDir;
+    private $clock;
+
     public function let(ClockInterface $clock)
     {
-        $clock->now()->willReturn('2018-01-01 00:00:00');
-        $this->beConstructedWith($clock);
+        $this->clock = $clock;
+        $this->clock->now()->willReturn('2018-01-01 00:00:00');
+        $this->beConstructedWith($this->clock);
     }
 
     function it_is_initializable()
@@ -71,5 +89,43 @@ class FramesSpec extends ObjectBehavior
         $frame = $this->start("First project");
         $this->stop()->shouldReturn($frame);
         $this->hasRunning()->shouldReturn(false);
+    }
+
+    function it_loads_frames()
+    {
+        $this->workDir = vfsStream::setup('workDir');
+        $this->createFile('frames.json', self::FILE_CONTENT
+        );
+        $this->load('vfs://workDir/frames.json');
+        $this->count()->shouldReturn(2);
+        $this->hasRunning()->shouldReturn(true);
+    }
+
+    function it_saves_frames()
+    {
+        $this->workDir = vfsStream::setup('workDir');
+        $this->start("First Project");
+        $this->clock->now()->willReturn('2018-01-01 00:01:27');
+        $this->stop();
+        $this->clock->now()->willReturn('2018-01-02 00:00:00');
+        $this->start("Second Project");
+        $this->save('vfs://workDir/frames.json');
+        $this->clear();
+        $this->load('vfs://workDir/frames.json');
+        $this->count()->shouldReturn(2);
+        $this->hasRunning()->shouldReturn(true);
+    }
+
+    private function createFile($path, $content)
+    {
+        $file = vfsStream::newFile($path);
+        $file->setContent($content);
+
+        $this->workDir->addChild($file);
+    }
+
+    private function getFileContent($fileName)
+    {
+        return file_get_contents($fileName);
     }
 }

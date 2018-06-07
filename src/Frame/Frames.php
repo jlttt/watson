@@ -57,4 +57,41 @@ class Frames
         }
         return $frame;
     }
+
+    public function load($fileName)
+    {
+        $frameDataList = json_decode(file_get_contents($fileName), true);
+        foreach($frameDataList as $frameData) {
+            $frame = new Frame($frameData['project']);
+            $frame->setStart($frameData['start']);
+            if (!empty($frameData['end'])) {
+                $frame->setStop($frameData['end']);
+            } else {
+                $this->running = $frame;
+            }
+            $this->frames[] = $frame;
+        }
+    }
+
+    public function save($fileName)
+    {
+        $frameDataList = [];
+        foreach ($this->frames as $frame) {
+            $frameData = [
+                'project' => $frame->getProject(),
+                'start' => $frame->getStart()->format('Y-m-d H:i:s'),
+            ];
+            if ($frame->isFinished()) {
+                $frameData['end'] = $frame->getStop()->format('Y-m-d H:i:s');
+            }
+            $frameDataList[] = $frameData;
+        }
+        file_put_contents($fileName, json_encode($frameDataList));
+    }
+
+    public function clear()
+    {
+        $this->frames = [];
+        $this->running = null;
+    }
 }

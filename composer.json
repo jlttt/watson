@@ -8,6 +8,7 @@
     "require-dev": {
         "phpspec/phpspec": "^4.3",
         "leanphp/phpspec-code-coverage": "^4.2",
-        "behat/behat": "^3.4"
+        "behat/behat": "^3.4",
+        "mikey179/vfsStream": "^1.6"
     }
 }
