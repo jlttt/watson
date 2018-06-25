@@ -1,0 +1,11 @@
+# behat.yml
+default:
+    suites:
+        frame:
+            contexts:
+                - FrameContext
+            paths:    [ "%paths.base%/features/frame" ]
+        project:
+            contexts:
+                - ProjectContext
+            paths:    [ "%paths.base%/features/project" ]

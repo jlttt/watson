@@ -9,7 +9,7 @@ use jlttt\watson\Frame\Frames;
 /**
  * Defines application features from the specific context.
  */
-class FeatureContext implements Context
+class FrameContext implements Context
 {
     protected $frames;
     protected $lastEndedFrame;
